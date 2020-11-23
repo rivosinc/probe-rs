@@ -364,9 +364,11 @@ impl CmsisDap {
         match self.swo_buffer_size {
             Some(swo_buffer_size) => {
                 // We'll request the smaller of the probe's SWO buffer and
-                // its maximum packet size. If the probe has less data to
-                // send it will respond with as much as it can.
-                let n = usize::min(swo_buffer_size, self.packet_size as usize) as u16;
+                // its maximum packet size (minus the size of the SWO read
+                // response). If the probe has less data to send it will
+                // respond with as much as it can.
+
+                let n = usize::min(swo_buffer_size, (self.packet_size - 4) as usize) as u16;
 
                 let response: swo::DataResponse =
                     commands::send_command(&mut self.device, swo::DataRequest { max_count: n })?;
