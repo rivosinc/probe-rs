@@ -31,7 +31,7 @@ bitfield = "0.13.2"
 bitvec = "0.22"
 enum-primitive-derive = "0.2.1"
 gimli = { version = "0.26.1", default-features = false, features = ["endian-reader", "read", "std"] }
-hidapi = { version = "1.2.0", default-features = false, features = ["linux-static-hidraw"] }
+hidapi = { version = "1.2.0", default-features = false, features = ["linux-static-hidraw", "illumos-static-libusb"] }
 ihex = "3.0.0"
 jaylink = "0.2.0"
 jep106 = "0.2.6"
