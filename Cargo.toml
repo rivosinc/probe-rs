@@ -19,3 +19,10 @@ split-debuginfo = "unpacked"
 
 [profile.dev]
 split-debuginfo = "unpacked"
+
+#
+# Replace libusb1-sys with one that builds correctly on illumos
+#
+[patch.crates-io]
+libusb1-sys = { git = "https://github.com/oxidecomputer/rusb", branch = "probe-rs-0.12" }
+
