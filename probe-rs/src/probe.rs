@@ -319,7 +319,7 @@ impl Probe {
         self.inner.target_reset()
     }
 
-    pub(crate) fn target_reset_assert(&mut self) -> Result<(), DebugProbeError> {
+    pub fn target_reset_assert(&mut self) -> Result<(), DebugProbeError> {
         log::debug!("Asserting target reset");
         self.inner.target_reset_assert()
     }
