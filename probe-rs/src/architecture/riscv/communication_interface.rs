@@ -39,6 +39,10 @@ pub enum RiscvError {
     UnsupportedDebugTransportModuleVersion(u8),
     #[error("The version '{0:?}' of the debug module is currently not supported.")]
     UnsupportedDebugModuleVersion(DebugModuleVersion),
+    /// The provided csr address was invalid/unsupported
+    #[error("CSR at address '{0:x}' is unsupported.")]
+    UnsupportedCsrAddress(u16),
+    /// The given program buffer register is not supported.
     #[error("Program buffer register '{0}' is currently not supported.")]
     UnsupportedProgramBufferRegister(usize),
     #[error("Program buffer is too small for supplied program.")]
@@ -1104,6 +1108,11 @@ impl<'probe> RiscvCommunicationInterface {
     pub fn read_csr_progbuf(&mut self, address: u16) -> Result<u32, RiscvError> {
         log::debug!("Reading CSR {:#04x}", address);
 
+        // csr addresses can only be 12bits
+        if address > 0xFFF {
+            return Err(RiscvError::UnsupportedCsrAddress(address));
+        }
+
         let s0 = self.abstract_cmd_register_read(&register::S0)?;
 
         // Read csr value into register 8 (s0)
@@ -1128,6 +1137,11 @@ impl<'probe> RiscvCommunicationInterface {
 
     pub fn write_csr_progbuf(&mut self, address: u16, value: u32) -> Result<(), RiscvError> {
         log::debug!("Writing CSR {:#04x}={}", address, value);
+
+        // csr addresses can only be 12bits
+        if address > 0xFFF {
+            return Err(RiscvError::UnsupportedCsrAddress(address));
+        }
 
         // Backup register s0
         let s0 = self.abstract_cmd_register_read(&register::S0)?;
